@@ -1,1 +1,1 @@
-# projet-mod-lisation-Gontier-Lahaie-Reboul-Valls
+# projet-modelisation-Gontier-Lahaie-Reboul-Valls
