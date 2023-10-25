@@ -10,6 +10,13 @@ class Sommet:
     
     def getId(self):
         return self.id
+    
+    def getAcces(self) -> str:
+        retour = str(self.id) + ' a accés à '
+        print(self.acces)
+        for sommet in self.acces :
+            retour += str(sommet) + ', '
+        return retour
 
 class Plateau:
     sommets = []
@@ -22,15 +29,15 @@ class Plateau:
         return random.choice(self.sommets)
     
     def getSommets(self) -> str :
-        retour = ''
+        retour = 'Plateau : '
         for sommet in self.sommets :
-            retour += sommet.getAcces()
+            retour += ' La case ' + sommet.getAcces()
         return retour
         
 
 class Bot:
     case = Sommet
-    team
+    team = str
 
     def __init__(self) -> None:
         self.case = Plateau.sommetRandom()
@@ -53,7 +60,7 @@ positionsDepart = []
 
 plateau = Plateau(1)
 
-print(plateau.sommetRandom().id)
+print( plateau.getSommets() )
 
 
 
