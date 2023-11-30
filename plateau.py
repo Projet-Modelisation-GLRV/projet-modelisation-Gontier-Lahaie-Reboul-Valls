@@ -2,24 +2,33 @@ import random
 from time import sleep
 import pygame
 import math
+import pprint
 
 pygame.init()
 
 # Couleurs
 BLACK = (0, 0, 0)
+GREY = (100, 100, 100)
 WHITE = (255,255,255)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 class Sommet:
+    x = 0
+    y = 0
 
     def __init__(self,id: int,acces: []) -> None:
         self.acces = acces
         self.id = id
-        self.color = BLACK
+        self.color = GREY
 
+    def setX(self,coordinate) -> None:
+        self.x = coordinate
     
-    def getId(self):
+    def setY(self,coordinate) -> None:
+        self.y = coordinate
+    
+    def getId(self) -> int:
         return self.id
     
     def getAcces(self) -> str:
@@ -41,7 +50,7 @@ class Bot:
     
     def move(self,gendarme,voleur):
         gameOver = False
-        self.case.color = BLACK
+        self.case.color = GREY
         sommetsAccessibles = []
         for case in plateau1.sommets:
             if case.id in self.case.acces :
@@ -64,16 +73,31 @@ class Plateau:
 
     def __init__(self,type: int) -> None:
         if (type == 1) :
-            self.sommets = [Sommet(1,[2,3,4,5,6]),Sommet(2,[1,3,4,5,6]),Sommet(3,[2,1,4,5,6]),Sommet(4,[2,3,1,5,6]),Sommet(5,[2,3,4,1,6]),Sommet(6,[2,3,4,5,1])]
+            nbRange = 6
+            for x in range(nbRange):
+                x1 = x + 1
+                subArray = []
+                for y in range(nbRange):
+                    y1 = y + 1
+                    if not (y1 == x1) :
+                        subArray.append(y1)
+                self.sommets.append(Sommet(x1, subArray))   
+         
 
     def sommetRandom(self) -> Sommet :
         return random.choice(self.sommets)
     
+    def getSommetById(self, id) -> Sommet :
+        for sommet in self.sommets:
+            if sommet.id == id :
+                return sommet
+    
     def afficher(self, nombreCases: int,screen: any,points: [] ) -> None :
-        for i in range(nombreCases):
-            pygame.draw.circle(screen, plateau1.sommets[i].color, points[i], 20)
-            for l in range(nombreCases):
-                pygame.draw.line(screen, BLACK, points[i], points[(l + 1) % nombreCases], 2)
+        for point in points:
+            pygame.draw.circle(screen, point.color, (point.x,point.y), 20)
+            for accessedPointId in point.acces:
+                accessedPoint = self.getSommetById(accessedPointId)
+                pygame.draw.line(screen, BLACK, (point.x,point.y), (accessedPoint.x,accessedPoint.y), 2)
         pygame.display.flip()
         
 
@@ -100,13 +124,17 @@ def partie1():
     clock = pygame.time.Clock()
 
     nombreCases = len(plateau1.sommets)
-    points = []
+    points = plateau1.sommets
     angle_increment = (2 * math.pi) / nombreCases
-    for i in range(nombreCases):
-        angle = i * angle_increment
-        x = int(center[0] + radius * math.cos(angle))
-        y = int(center[1] + radius * math.sin(angle))
-        points.append((x, y))
+    cpt = 0
+
+    print(points)
+    for point in points:
+        print(point)
+        angle = cpt * angle_increment
+        point.x = int(center[0] + radius * math.cos(angle))
+        point.y = int(center[1] + radius * math.sin(angle))
+        cpt += 1
 
 
     gendarme = Bot('gendarme')
@@ -116,7 +144,7 @@ def partie1():
 
     pygame.display.set_caption("Tour du voleur") 
 
-    sleep(3)
+    #sleep(1)
     voleur = Bot('voleur')
 
     plateau1.afficher(nombreCases,screen,points)
@@ -131,14 +159,14 @@ def partie1():
 
         if gameOver :
             break
-        sleep(3)
+        sleep(1)
 
         gameOver = voleur.move(gendarme,voleur)
         pygame.display.set_caption("Tour du voleur") 
         
         plateau1.afficher(nombreCases,screen,points)
 
-        sleep(3)
+        sleep(1)
 
     pygame.quit()
 
