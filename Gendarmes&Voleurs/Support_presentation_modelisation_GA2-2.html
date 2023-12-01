@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu des Gendarmes et des Voleurs</title>
+
+    <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f7f7f7;
+}
+
+h1, h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h2 {
+    border-bottom: 2px solid #555;
+    padding-bottom: 10px;
+}
+
+h3 {
+    text-align: center;
+}
+
+p {
+    color: #666;
+    line-height: 1.5;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #f5f5f5;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul, ol {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Additional styling for specific elements */
+h1 {
+    font-size: 2.5em;
+}
+
+h2 {
+    font-size: 2em;
+}
+    </style>
+</head>
+
+
+<body>
+
+    <h1>Dossier de recherche : Jeu des gendarmes et des voleurs</h1>
+
+    <h3>Par Gontier Luke, Lahaie Thibaut, Reboul Nathan, Valls Marion</h3>
+
+    <h2>I. Contexte</h2>
+
+    <p>C’est durant les années 80 que ce jeu a fait son apparition. Depuis, ses nombreuses variantes sont étudiées. Le jeu des gendarmes et des voleurs fut lui-même premier variant des graphes réflexifs (graphes dont tous les sommets ont une boucle). C’est indépendamment que le duo NOWAKOWSKI & WINKLER et QUILLOT ont publié le concept. Les deux travaux partent du principe qu’il n’y a qu’un seul gendarme et un voleur. Suite à cela, beaucoup d’algorithmes gendarmes gagnants ont été rédigés. Bien que ce principe de criminel et force de l’ordre s’approche d’un concept réel semblable à une poursuite pour sécuriser un environnement, il y a depuis quelques années un milieu virtuel où son utilisation est récurrente et variée : le Web.</p>
+
+    <h2>II. Présentation générale du jeu</h2>
+
+    <p>Le jeu des gendarmes et des voleurs est un jeu stratégique dans lequel deux joueurs s’affrontent sur un plateau. Chacun des joueurs représente soit le camp des gendarmes ou des voleurs et leur objectif diffère en fonction du camp.</p>
+
+    <p>Le joueur dans le camp des gendarmes dispose de plusieurs pions rouges qu’il peut déplacer sur le plateau un à un. Son objectif est de réussir à placer un pion rouge sur une même case qu’un pion voleur (noir) afin de remporter la partie.</p>
+
+    <p>Le joueur dans le camp des voleurs dispose donc d’un ou de plusieurs pions noirs en fonction des règles définies, il doit lui aussi les déplacer un à un et son objectif est de ne jamais permettre à un gendarme de placer un pion rouge sur une même case qu’un pion noir.</p>
+
+    <p>Ce jeu possède une grande variété de règles notamment concernant la taille et la forme du plateau, mais aussi en fonction du nombre de pions donnés à chaque joueur.</p>
+
+    <h2>III. Règles du jeu</h2>
+
+    <ul>
+        <li>Pour les Gendarmes :</li>
+        <p>Objectif du Jeu : Attraper le ou les pions du voleur en occupant la même case.</p>
+
+        <li>Pour les Voleurs :</li>
+        <p>Objectif du Jeu : Éviter le ou les pions des gendarmes et ne pas se retrouver sur la même case.</p>
+
+        <li>Règlement :</li>
+        <ol>
+            <li>Le camp des gendarmes place ses pions en premier sur le plateau, où il le souhaite.</li>
+            <li>Ensuite, le camp des voleurs positionne ses pions sur le plateau, également à leur convenance.</li>
+            <li>Chaque camp peut déplacer un seul pion d'une case dans n'importe quelle direction (droite, gauche, haut, bas, etc.).</li>
+            <li>Le camp des gendarmes commence en premier.</li>
+            <li>Le jeu se termine lorsque les pions des gendarmes capturent tous les pions des voleurs ou que le nombre de déplacements total est atteint.</li>
+        </ol>
+    </ul>
+
+    <h2>IV. Les variantes du jeu</h2>
+
+    <ul>
+        <li>Vitesse :</li>
+        <p>Dans les règles, le voleur et le gendarme ont une vitesse de déplacement de 1 par tour. On peut imaginer que le voleur peut être plus lent ou plus rapide pour changer l’issue du jeu.</p>
+
+        <li>Nombre :</li>
+        <p>Le nombre de gendarmes et de voleurs dans une partie peut varier et peut influencer directement l’issue du jeu.</p>
+
+        <li>Plateau :</li>
+        <p>La forme et la taille du plateau peuvent varier : il peut être plus ou moins grand, autorisant ou non les déplacements en diagonale et sur place.</p>
+    </ul>
+
+    <h2>V. Graphes</h2>
+
+    <p>Afin de déterminer les possibilités de victoire existantes du jeu pour les deux camps, nous allons utiliser la <a href="https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_graphes">théorie des graphes</a>.</p>
+
+    <p>Les notions de graphes que nous allons utiliser nous permettent d’explorer les différentes possibilités proposées aux joueurs. En suivant les graphes, nous seront donc capables de déterminer si un graphe est gendarme-gagnant ou voleur-gagnant.</p>
+
+    <ol>
+        <li>Définition :</li>
+        <p>Pour bien comprendre le sujet, il est important de définir quelques termes.</p>
+        <ul>
+            <li>Graphe : Une représentation abstraite d'un ensemble de sommets reliés entre eux, où certaines paires sont liées par des relations.</li>
+            <li>Arrête : Une liaison ou connexion entre deux sommets dans un graphe, représentant souvent une relation ou une interaction entre les sommets correspondants.</li>
+            <li>Arc : Une arête orientée, indiquant une direction spécifique entre deux sommets. Les arcs ont un point de départ et un point d'arrivée.</li>
+            <li>Sommet : Un point individuel dans un graphe, représentant un objet ou une entité. Aussi appelé nœud.</li>
+            <li>Cycle : Une séquence d'arêtes dans un graphe qui forme un chemin fermé, c'est-à-dire qu'il commence et se termine au même sommet.</li>
+            <li>Chemin : Une séquence d'arêtes (ou d'arcs) dans un graphe, reliant une séquence de sommets sans nécessairement former un cycle. Un chemin peut être orienté ou non orienté.</li>
+            <li>Graphe réflexif : Si chaque sommet du graphe est lié à lui-même par une arête.</li>
+            <li>Boucle : Une arête qui relie un sommet à lui-même est une boucle.</li>
+            <br>
+        </ul>
+        <li>Gagner en utilisant les graphes :</li>
+        <p>Les graphes sont souvent utilisés afin de mieux appréhender les jeux combinatoires. En effet, leur usage permet de modéliser les différents choix réalisables dans un jeu et de les analyser.</p>
+    
+        <p>Les sommets représentent une position dans un jeu tandis que les arcs les reliant sont les choix réalisés par les joueurs.</p>
+    
+        <p>En étudiant un graphe, il est possible de repérer les différentes possibilités permettant à un joueur de s’assurer la victoire.</p>
+    
+        <li>Première approche :</li>
+        <p>Prenons l’exemple du jeu dans lequel le gendarme et le voleur ne disposent que d’un seul pion :</p>
+    
+        <p>Il est possible dans ce cas de déterminer si la victoire est possible pour un gendarme en déterminant si le graphe est dit “<a href=https://fr.wikipedia.org/wiki/Graphe_cop-win>cop-win</a>". On dit alors qu’aucune solution ne permet au gendarme de remporter une partie lorsque le graphe est dit “robber-win”.</p>
+    
+        <p>Un graphe est cop-win lorsqu’il est démontable fini, c’est-à-dire que les différents sommets qui composent le graphe peuvent être démantelés par récurrence. On dit qu’un sommet v est dominé par un sommet w si l’ensemble des sommets adjacents au sommet v sont inclus parmi les sommets adjacents au sommet w.</p>
+    
+        <p>Lorsqu’un graphe est cyclique, il est robber-win, et lorsqu’il n'est composé que d’un sommet, il est cop-win.</p>
+    
+        <p>Afin de prouver que le graphe est cop-win, nous allons retirer d’un graphe chacun de ses sommets étant dominés par un autre par récurrence.</p>
+    
+        <table>
+            <thead>
+                <tr>
+                    <th>Graphe initial</th>
+                    <th>Graphe sans sommet dominé</th>
+                    <th>Bilan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="media/graphe_initial.png" alt="Graphe initial"></td>
+                    <td><img src="media/graphe_sans_sommet.png" alt="Graphe sans sommet dominé"></td>
+                    <td>Après avoir retiré par récurrence l’ensemble des sommets dominés. On obtient un graphe composé d’un seul point. Cela veut donc dire que le graphe initial est cop-win.</td>
+                </tr>
+                <tr>
+                    <td><img src="media/graphe_initial_2.png" alt="Graphe initial"></td>
+                    <td><img src="media/graphe_sans_sommet_2.png" alt="Graphe sans sommet dominé"></td>
+                    <td>Après avoir retiré par récurrence l’ensemble des sommets dominés. On obtient un graphe composé d’un seul point. Cela veut donc dire que le graphe initial est cop-win.</td>
+                </tr>
+                <tr>
+                    <td><img src="media/graphe_initial_3.png" alt="Graphe initial"></td>
+                    <td><img src="media/graphe_sans_sommet_3.png" alt="Graphe sans sommet dominé"></td>
+                    <td>Après avoir retiré par récurrence l’ensemble des sommets dominés. On obtient un graphe cyclique. Cela veut donc dire que le graphe initial est robber-win.</td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <p>Un graphe est donc cop-win s’il est complet ou que l’ensemble de ses sommets est dominé par un autre.</p>
+    
+        <li>Étude d’un plateau de taille 2x2</li>
+        <p>Dans le cadre d’une partie avec 1 gendarme et 1 voleur sur un plateau 2x2, nous avons étudié les dispositions des pions sur le plateau afin de trouver les stratégies gagnantes.</p>
+    
+        <p>Graphe G, de 16 sommets</p>
+    
+        <img src="media/graphe_diamant.png" alt="Graphe diamant">
+    
+        <img src="media/graphe_choix.png" alt="Graphe choix">
+    
+        <p><u>Légende :</u></p>
+        <p>X : voleur</p>
+        <p>O : gendarme</p>
+        <p>Un numéro correspond à un sommet dans le graphe.</p>
+        <p>Les sommets en fond jaune sont des cas où la partie se termine.</p>
+    
+        <li>Cas particulier</li>
+    
+        <table>
+            <thead>
+                <tr>
+                    <th>Graphe</th>
+                    <th>Observation</th>
+                    <th>Démonstration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="media/graphe_isole.png" alt="Graphe isolé"></td>
+                    <td>Un graphe non connexe est voleur gagnant.</td>
+                    <td>Initialement, le policier choisit un sommet du graphe. Il suffit que le voleur choisisse un sommet sur une composante connexe différente de celle contenant le sommet occupé par le policier pour échapper éternellement à la capture.</td>
+                </tr>
+                <tr>
+                    <td><img src="media/graphe_isole.png" alt="Graphe isolé"></td>
+                    <td>Un graphe non connexe est voleur gagnant pour le jeu de poursuite irréflexif.</td>
+                    <td>Donc la même démonstration que l’observation précédente reste valide.</td>
+                </tr>
+            </tbody>
+        </table>
+    
+    </ol>
+    
+    <h2>VI. Stratégie</h2>
+    
+    <p>Une première stratégie gagnante peut être trouvée en appliquant un algorithme élaboré par G. Hahn et G. MacGillivray.</p>
+    
+    <a href= "https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/17845/El_Ouarari_Amal_2006_memoire.pdf?sequence=1&isAllowed=y" >[p.46 El_Ouarari_Amal_2006_memoire.pdf]</a>
+    
+    <h2>VII. Intelligence artificielle</h2>
+    
+    <p>L'objectif de ce projet est de créer un environnement interactif mettant en scène deux intelligences artificielles (IA) qui s'affronteront dans le rôle des gendarmes et des voleurs, chacune cherchant à remporter la partie. Au cours des différents affrontements, nous procéderons à une analyse comparative entre les graphes préalablement définis et les résultats de chaque partie.</p>
+    
+    <p>Nos IA seront basées sur le modèle des arbres de décision, où chaque décision est dictée par un arbre logique définissant les actions à entreprendre en fonction de la situation. Pour illustrer, lors du tour des voleurs, si un gendarme a la possibilité d'atteindre un voleur au prochain tour, le joueur examinera les cases accessibles. Si une case n'est pas occupée par un gendarme ou n'est pas à leur portée, le voleur s'y dirigera. En revanche, si la case est occupée ou hors de portée, le voleur prendra une action conduisant à une défaite inévitable.</p>
+    
+    <h2>Liens utiles :</h2>
+    
+    <ul>
+        <li><a href="https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/16692/Zine_Youssef_2005_memoire.pdf?sequence=1&isAllowed=y">Zine_Youssef_2005_memoire.pdf</a></li>
+        <li><a href="https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/17845/El_Ouarari_Amal_2006_memoire.pdf?sequence=1&isAllowed=y">El_Ouarari_Amal_2006_memoire.pdf</a></li>
+        <li><a href="https://www-sop.inria.fr/mascotte/seminaires/JGA08/pdf/nisse.pdf">Jeu des gendarmes et du voleur (inria.fr)</a></li>
+        <li><a href="https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/16660/Ramanampanoharana_Tantely_2004_memoire.pdf?sequence=1&isAllowed=y">Ramanampanoharana_Tantely_2004_memoire.pdf</a></li>
+    </ul>
+    
+    <h2>Anglais :</h2>
+    
+    <ul>
+        <li><a href="https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/27810/Ramamonjisoa_Frank_2022_these.pdf?sequence=2#page=73">Ramamonjisoa_Frank_2022_these.pdf</a></li>
+        <li><a href="https://www.sciencedirect.com/science/article/pii/0012365X83901607">Lien ScienceDirect</a></li>
+        <li><a href="https://www.sciencedirect.com/science/article/pii/S0012365X08002173">The capture time of a graph - ScienceDirect</a></li>
+        <li><a href="https://www.sciencedirect.com/science/article/pii/S0012365X16304307">Cops and Robbers ordinals of cop-win trees - ScienceDirect</a></li>
+        <li><a href="https://www.sciencedirect.com/science/article/pii/S0012365X12000064">Characterizations of k-copwin graphs - ScienceDirect</a></li>
+    </ul>
+    
+    <h2>Vidéo :</h2>
+    
+    <ul>
+        <li><a href="https://www.youtube.com/watch?v=tfGJtIdslfs">Des intelligences artificielles jouent à cache-cache et crack le jeu !</a></li>
+        <li><a href="https://www.youtube.com/watch?v=71UbDN4csas">J'ai codé un robot pour ATOMISER Crossy Road.</a></li>
+        <li><a href="https://www.youtube.com/watch?v=9mJEu-j1KT0">The Cops and Robbers Theorem | Infinite Series</a></li>
+    </ul>
+</body>
+</html>
