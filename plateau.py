@@ -3,7 +3,6 @@ from time import sleep
 import pygame
 import math
 
-pygame.init()
 
 # Couleurs
 BLACK = (0, 0, 0)
@@ -13,25 +12,20 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 class Sommet:
-    x = 0
-    y = 0
+    rayon = 20
 
-    def __init__(self,id: int,acces: []) -> None:
+    def __init__(self,id: int,acces: [], x: int, y: int) -> None:
         self.acces = acces
         self.id = id
         self.color = GREY
-
-    def setX(self,coordinate) -> None:
-        self.x = coordinate
-    
-    def setY(self,coordinate) -> None:
-        self.y = coordinate
+        self.x = x
+        self.y = y
     
     def getId(self) -> int:
         return self.id
     
     def getAcces(self) -> str:
-        retour = str(self.id) + ' a accés à '
+        retour = str(self.id) + ' a accès à '
         for sommet in self.acces :
             retour += str(sommet) + ', '
         return retour
@@ -67,40 +61,80 @@ class Bot:
         return gameOver
 
 class Plateau:
-    sommets = []
 
     def __init__(self,type: int) -> None:
         # Paramètres de la fenêtre
-        self.width, self.height = 400, 400
+        self.width, self.height = 1000, 1000
+        self.sommets = []
 
         # Configuration de l'écran Pygame
         self.screen = pygame.display.set_mode((self.width, self.height))
+        self.screen.lock()
         
         if (type == 1) :
             self.generateType1()
-            
+        if (type == 2) :
+            self.generateType2()
+
     def generateType1(self) -> None:
-        nombreCases = 6
+        nombreCases = 16
+        sqrt = math.sqrt(nombreCases)
+        largeurUtilisable = self.width*0.9
+        hauteurUtilisable = self.height*0.9
+        
+        rayon = Sommet.rayon
+        largeurUtilisable -= rayon*2
+        hauteurUtilisable += rayon*2
+
+        coordonneeXInitiale = self.width - largeurUtilisable
+        coordonneeX =  coordonneeXInitiale
+        coordonneeY =  self.height - hauteurUtilisable
+
         for x in range(nombreCases):
-            x1 = x + 1
+            caseActuel = x + 1
+            subArray = []
+            colX = (int) (caseActuel % sqrt)
+            if not colX == 1 :
+                coordonneeX += largeurUtilisable/sqrt
+            for y in range(nombreCases):
+                y1 = y + 1
+                colY = (int) (y1 % sqrt)
+                if not (y1 == caseActuel) :
+                    if (not ((colX == 1 or colX == 0) and (colY == 1 or colY == 0)) or colX == colY) :
+                        suivCol = colX+1
+                        if suivCol == sqrt :
+                            suivCol = 0
+                        prevCol = colX-1
+                        if prevCol < 0 :
+                            prevCol = sqrt-1
+                        colProches = [prevCol,suivCol]
+                        if (colY == colX or colY in colProches) and abs(caseActuel-y1) <= sqrt+1 : 
+                            subArray.append(y1)
+            self.sommets.append(Sommet(caseActuel, subArray, coordonneeX, coordonneeY))
+            if colX == 0 :
+                coordonneeX = coordonneeXInitiale 
+                coordonneeY += hauteurUtilisable/sqrt
+            
+    def generateType2(self) -> None:
+        nombreCases = 6
+        cpt = 0            
+
+        center = (self.width // 2, self.height // 2)
+        rayon = 150
+        angle_increment = (2 * math.pi) / nombreCases
+        
+        for x in range(nombreCases):
+            caseActuel = x + 1
             subArray = []
             for y in range(nombreCases):
                 y1 = y + 1
-                if not (y1 == x1) :
+                if not (y1 == caseActuel) :
                     subArray.append(y1)
-            self.sommets.append(Sommet(x1, subArray))             
-
-        center = (self.width // 2, self.height // 2)
-        radius = 150
-        points = self.sommets
-        angle_increment = (2 * math.pi) / nombreCases
-        cpt = 0
-        for point in points:
             angle = cpt * angle_increment
-            point.x = int(center[0] + radius * math.cos(angle))
-            point.y = int(center[1] + radius * math.sin(angle))
+            coordonneeX = int(center[0] + rayon * math.cos(angle))
+            coordonneeY = int(center[1] + rayon * math.sin(angle))
             cpt += 1
-
+            self.sommets.append(Sommet(caseActuel, subArray, coordonneeX, coordonneeY))
 
     def sommetRandom(self) -> Sommet :
         return random.choice(self.sommets)
@@ -112,21 +146,25 @@ class Plateau:
     
     def afficher(self) -> None :
         for point in self.sommets:
-            pygame.draw.circle(self.screen, point.color, (point.x,point.y), 20)
+            pygame.draw.circle(self.screen, point.color, (point.x,point.y), Sommet.rayon)
             for accessedPointId in point.acces:
                 accessedPoint = self.getSommetById(accessedPointId)
                 pygame.draw.line(self.screen, BLACK, (point.x,point.y), (accessedPoint.x,accessedPoint.y), 2)
         pygame.display.flip()
         
+pygame.init()
 
 
 def partie(plateauType):
+
     positionsDepart = []
-    plateau = Plateau(plateauType)
+    plateau = Plateau
     gendarme = Bot
     voleur = Bot
     gameOver = bool
     gameOver = False
+
+    plateau = Plateau(plateauType)
 
     pygame.display.set_caption("Tour du gendarme")
     plateau.screen.fill(WHITE)
@@ -163,7 +201,11 @@ def partie(plateauType):
 
         sleep(1)
 
+    pygame.display.flip()
     pygame.quit()
 
 
+
+
 partie(1)
+partie(2)
