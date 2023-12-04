@@ -64,7 +64,7 @@ class Plateau:
 
     def __init__(self,type: int) -> None:
         # Paramètres de la fenêtre
-        self.width, self.height = 1000, 1000
+        self.width, self.height = 500, 500
         self.sommets = []
 
         # Configuration de l'écran Pygame
@@ -84,7 +84,7 @@ class Plateau:
         
         rayon = Sommet.rayon
         largeurUtilisable -= rayon*2
-        hauteurUtilisable += rayon*2
+        hauteurUtilisable -= rayon*2
 
         coordonneeXInitiale = self.width - largeurUtilisable
         coordonneeX =  coordonneeXInitiale
