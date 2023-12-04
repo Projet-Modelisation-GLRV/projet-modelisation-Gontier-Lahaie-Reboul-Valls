@@ -69,7 +69,6 @@ class Plateau:
 
         # Configuration de l'écran Pygame
         self.screen = pygame.display.set_mode((self.width, self.height))
-        self.screen.lock()
         
         if (type == 1) :
             self.generateType1()
