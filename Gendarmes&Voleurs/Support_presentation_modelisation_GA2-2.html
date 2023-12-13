@@ -100,11 +100,22 @@ h2 {
 
     <h3>Par Gontier Luke, Lahaie Thibaut, Reboul Nathan, Valls Marion</h3>
 
-    <h2>I. Contexte</h2>
+    <h2>Sommaire</h2>
+
+    <h3><a href="#I">I. Contexte</a></h3>
+    <h3><a href="#II">II. Présentation générale du jeu</a></h3>
+    <h3><a href="#III">III. Règles du jeu</a></h3>
+    <h3><a href="#IV">IV. Les variantes du jeu</a></h3>
+    <h3><a href="#V">V. Graphes</a></h3>
+    <h3><a href="#VI">VI. Stratégie</a></h3>
+    <h3><a href="#VII">VII. "Cop number"</a></h3>
+    <h3><a href="#VIII">VIII. Intelligence artificielle</a></h3>
+
+    <h2 id="I">I. Contexte</h2>
 
     <p>C’est durant les années 80 que ce jeu a fait son apparition. Depuis, ses nombreuses variantes sont étudiées. Le jeu des gendarmes et des voleurs fut lui-même premier variant des graphes réflexifs (graphes dont tous les sommets ont une boucle). C’est indépendamment que le duo NOWAKOWSKI & WINKLER et QUILLOT ont publié le concept. Les deux travaux partent du principe qu’il n’y a qu’un seul gendarme et un voleur. Suite à cela, beaucoup d’algorithmes gendarmes gagnants ont été rédigés. Bien que ce principe de criminel et force de l’ordre s’approche d’un concept réel semblable à une poursuite pour sécuriser un environnement, il y a depuis quelques années un milieu virtuel où son utilisation est récurrente et variée : le Web.</p>
 
-    <h2>II. Présentation générale du jeu</h2>
+    <h2 id="II">II. Présentation générale du jeu</h2>
 
     <p>Le jeu des gendarmes et des voleurs est un jeu stratégique dans lequel deux joueurs s’affrontent sur un plateau. Chacun des joueurs représente soit le camp des gendarmes ou des voleurs et leur objectif diffère en fonction du camp.</p>
 
@@ -114,7 +125,7 @@ h2 {
 
     <p>Ce jeu possède une grande variété de règles notamment concernant la taille et la forme du plateau, mais aussi en fonction du nombre de pions donnés à chaque joueur.</p>
 
-    <h2>III. Règles du jeu</h2>
+    <h2 id="III">III. Règles du jeu</h2>
 
     <ul>
         <li>Pour les Gendarmes :</li>
@@ -133,7 +144,7 @@ h2 {
         </ol>
     </ul>
 
-    <h2>IV. Les variantes du jeu</h2>
+    <h2 id="IV">IV. Les variantes du jeu</h2>
 
     <ul>
         <li>Vitesse :</li>
@@ -147,7 +158,7 @@ h2 {
         <p>A ceci peut s'ajouter l'orientation du plateau.</p>
     </ul>
 
-    <h2>V. Graphes</h2>
+    <h2 id="V">V. Graphes</h2>
 
     <p>Afin de déterminer les possibilités de victoire existantes du jeu pour les deux camps, nous allons utiliser la <a href="https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_graphes">théorie des graphes</a>.</p>
 
@@ -165,6 +176,7 @@ h2 {
             <li>Chemin : Une séquence d'arêtes (ou d'arcs) dans un graphe, reliant une séquence de sommets sans nécessairement former un cycle. Un chemin peut être orienté ou non orienté.</li>
             <li>Graphe réflexif : Si chaque sommet du graphe est lié à lui-même par une arête.</li>
             <li>Boucle : Une arête qui relie un sommet à lui-même est une boucle.</li>
+            <li>Graphe planaire : Un graphe qui peut se représenter sur un plan sans qu'aucune arrête n'en croise une autre.</li>
             <br>
         </ul>
         <li>Gagner en utilisant les graphes :</li>
@@ -256,13 +268,31 @@ h2 {
     
     </ol>
     
-    <h2>VI. Stratégie</h2>
+    <h2 id="VI">VI. Stratégie</h2>
     
-    <p>Une première stratégie gagnante peut être trouvée en appliquant un algorithme élaboré par G. Hahn et G. MacGillivray.</p>
+    <p>Une première stratégie gagnante peut être trouvée en appliquant l'algorithme de recherche du plus court chemin.
+        En effet, cet algorihtme consiste à calculer, depuis un sommet donné, le plus court chemin (donc la suite de sommets par lesquels passer) afin d'atteindre un autre sommet donné.
+        Nous allons donc utiliser cet aglorithme plusieurs fois : </p>
+
+        <li>La première fois pour placer le voleur. Le policier est placé de manière aléatoire et la voleur est placé de manière à être le plus loin du policier.</li>
+        <li>Ensuite, tout au long de la partie, cet algorithme est joué pour le policier, afin de le déplacer vers le sommet le plus proche du voleur et pour le voleur afin de le déplacer vers le sommet le plus éloigné du policier.</li>
+
+    <p>Nous utilisons donc l'algorithme de Dijkstra. Notre plateau est un graphe mais il n'est pas pondéré (notre algorithme considère donc que tous ses poids sont à 1).</p>
     
-    <a href= "https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/17845/El_Ouarari_Amal_2006_memoire.pdf?sequence=1&isAllowed=y" >[p.46 El_Ouarari_Amal_2006_memoire.pdf]</a>
-    
-    <h2>VII. Intelligence artificielle</h2>
+    <h2 id="VII">VII. "Cop number"</h2>
+
+    <p>Le "Cop number" noté cn(G) avec G un graphe, est le nombre minimum de policiers pour rendre le jeu policier-gagnant. Le but est de trouver le nombre de policier minimal pour remporter le jeu.
+        Une première propriété a peu être trouvée afin d'encadrer ce nombre:
+        1 ≤ cn(G) ≤ |V(G)| avec |V(G)| représentant le nombre de sommets du graphe.
+        Ce "Cop number" a été très étudié et de nombreuses théories ont été émises le concernant.
+        Une d'entre elles a été élaborée par M. Aigner et M. Fromme et affirme que cn(G) ≤ 3 pour tout graphe planaire G.
+        En effet, ils affirment que 3 policier suffisent à surveiller tous les chemins d'un graphe de manière à ce que si le voleur se déplace sur un chemin, il sera capturé.
+        Par exemple, sur le graphe ci-dessous, on constate que 3 policiers répartis comme représenté sur les sommets en rouge couvrent tous les chemins possibles :</p>
+
+        <br>
+        <img src="media/graphe_cop_number.png" alt="Graphe cop number">
+
+    <h2 id="VIII">VIII. Intelligence artificielle</h2>
     
     <p>L'objectif de ce projet est de créer un environnement interactif mettant en scène deux intelligences artificielles (IA) qui s'affronteront dans le rôle des gendarmes et des voleurs, chacune cherchant à remporter la partie. Au cours des différents affrontements, nous procéderons à une analyse comparative entre les graphes préalablement définis et les résultats de chaque partie.</p>
     
