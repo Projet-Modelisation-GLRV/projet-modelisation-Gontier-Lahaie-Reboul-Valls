@@ -8,10 +8,13 @@ import numpy as np
 
 
 def createGame(n, distanceBetweenPlayers=3):
+    # Génération d'un graphe aléatoire de taille n
     graphe = nx.gnm_random_graph(n, n * 2)
     # Placer un gendarme et un voleur aléatoirement sur le graphe
     gendarme = np.random.randint(0, n)
     voleur = np.random.randint(0, n)
+
+    # Tant que le gendarme et le voleur n'ont pas "distanceBetweenPlayers" cases de distance, changer la position du voleur
     while (gendarme == voleur) or (
             nx.shortest_path_length(graphe, source=gendarme, target=voleur) < distanceBetweenPlayers):
         voleur = np.random.randint(0, n)
@@ -26,19 +29,24 @@ def getNextMoveWithNetworkx(graphe, gendarme, voleur):
     voleurNextMove = None
     # Récuperation des voisins du voleur
     voleurNeighbors = list(graphe.neighbors(voleur))
-    # Vérifier quel voisin du voleur est le plus éloigné du gendarme avec le chemin le plus court
     voleurPath = []
+    # Stocker dans une liste les meilleurs chemins entre les voisins du voleur et le gendarme
     for neighbor in voleurNeighbors:
         voleurPath.append(nx.shortest_path(graphe, source=neighbor, target=gendarme))
+
+    # Trier les résultats en fonction de la longueur
     voleurPath.sort(key=len)
+
+    # Le prochain meilleur coup du voleur est donc le dernier chemin
     voleurNextMove = voleurPath[-1][0]
     return gendarmePath[1], voleurNextMove
 
 
 def showGraph(graphe, gendarme=None, voleur=None, nextGendarmeMove=None, nextVoleurMove=None):
+    # Vérifier si un gendarme et un voleur doivent être affichés
     if not (gendarme is None and voleur is None):
-        # Afficher le graphe avec le prochain déplacement du gendarme et du voleur
         colors = []
+        # Pour chaque noeud du graphe, ajouter la couleur associé si c'est un gendarme, voleur ou prochain coup
         for i in range(graphe.number_of_nodes()):
             if i == gendarme:
                 colors.append('blue')
@@ -54,6 +62,7 @@ def showGraph(graphe, gendarme=None, voleur=None, nextGendarmeMove=None, nextVol
         pos = nx.spring_layout(graphe)
         nx.draw(graphe, pos, node_color=colors, with_labels=True)
 
+    # Sinon (lorsque aucun joueur ne doit être affiché)
     else:
         pos = nx.spring_layout(graphe)
         nx.draw(graphe, pos, with_labels=True)
@@ -62,7 +71,7 @@ def showGraph(graphe, gendarme=None, voleur=None, nextGendarmeMove=None, nextVol
 
 
 def dijkstra(graph, start, end):
-    # Implémentation de l'algorithme de Dijkstra pour trouver le plus court chemin
+    # Définition a la valeur Infini de chacun des noeuds du graphe
     distances = {node: float('infinity') for node in graph.nodes}
 
     # Définition du nœud de départ a 0
@@ -76,9 +85,11 @@ def dijkstra(graph, start, end):
         # Récupération du nœud avec la plus petite distance
         current_distance, current_node = heapq.heappop(priority_queue)
 
+        # Si le noeuf courrant est le noeuf final, sortir de la boucle tant que
         if current_node == end:
             break
 
+        # Pour chacun des voisins du noeud courant
         for neighbor in graph.neighbors(current_node):
             distance = current_distance + 1
             if distance < distances[neighbor]:
