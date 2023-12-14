@@ -178,16 +178,10 @@ def demo_cop_win():
     showGraph(graphe)
 
     # Tant que le graphe n'est pas cop-win et qu'il n'est pas composé d'un cycle
-    while (True):
-        print("Est cyclique avec 4 noeuds ou plus : ", not isCyclic(graphe) and graphe.number_of_nodes() <=4)
-        print(isCyclic(graphe) and graphe.number_of_nodes() >= 4)
-        print("Il ne reste que 1 noeud : ")
-        print(graphe.number_of_nodes() == 1)
-        print("L'un ou l'autre")
-        print((isCyclic(graphe) and graphe.number_of_nodes() >= 4) or graphe.number_of_nodes() == 1)
+    while not ((isCyclic(graphe) and graphe.number_of_nodes() >= 4) or graphe.number_of_nodes() == 1):
         graphe = dismantle(graphe)
 
-    if isCyclic(graphe):
+    if isCyclic(graphe) and graphe.number_of_nodes() >= 4:
         print("Le graphe est robber-win")
 
     else:
