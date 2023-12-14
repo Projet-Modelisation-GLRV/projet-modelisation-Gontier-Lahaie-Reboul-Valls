@@ -172,9 +172,9 @@ def isCyclic(graphe):
     return True
 
 
-def demo_cop_win():
+def demo_cop_win(plateau = createGame(10, 2)[0]):
     # Création d'un jeu aléatoire de n sommets
-    graphe = createGame(10, 2)[0]
+    graphe = plateau
     showGraph(graphe)
 
     # Tant que le graphe n'est pas cop-win et qu'il n'est pas composé d'un cycle
@@ -189,4 +189,4 @@ def demo_cop_win():
 
 
 # demo_dijkstra()
-demo_cop_win()
+#demo_cop_win()
