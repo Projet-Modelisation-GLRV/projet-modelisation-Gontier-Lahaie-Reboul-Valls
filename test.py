@@ -177,11 +177,11 @@ def demo_cop_win():
     graphe = createGame(10, 2)[0]
     showGraph(graphe)
 
-    # Tant que le graphe n'est pas cop-win et qu'il n'est pas composé d'un cycle ou qu'il n'est pas biparti complet
-    while not isCyclic(graphe) and graphe.number_of_nodes() != 1 and not nx.is_bipartite(graphe):
+    # Tant que le graphe n'est pas cop-win et qu'il n'est pas composé d'un cycle
+    while not isCyclic(graphe) and graphe.number_of_nodes() != 1:
         graphe = dismantle(graphe)
 
-    if isCyclic(graphe) or nx.is_bipartite(graphe):
+    if isCyclic(graphe):
         print("Le graphe est robber-win")
 
     else:
