@@ -159,20 +159,23 @@ def isDominated(graphe, node):
     return False
 
 
-def dismantle(graphe):
+def dismantle(graphe, tentative):
     # Retirer un sommet afin de démanteler le graphe (tester si il est cop-win)
 
     # Choisir un sommet aléatoirement parmi les sommets du graphe
     nodes = list(graphe.nodes)
     node = random.choice(nodes)
 
+    tentative += 1
+
     # Suppression du sommet si il est dominé par un autre sommet
     if isDominated(graphe, node):
         graphe.remove_node(node)
+        tentative = 0
         time.sleep(1)
         showGraph(graphe)
 
-    return graphe
+    return graphe, tentative
 
 
 def isCyclic(graphe):
@@ -183,16 +186,25 @@ def isCyclic(graphe):
     return True
 
 
+def isPrism(graphe):
+    if graphe.number_of_nodes() == 6 and graphe.number_of_edges() == 9:
+        for node in graphe.nodes:
+            if len(list(graphe.neighbors(node))) != 3:
+                return False
+        return True
+
+
 def demo_cop_win(plateau = createGame(10, 2)[0]):
     # Création d'un jeu aléatoire de n sommets
     graphe = plateau
     showGraph(graphe)
 
+    tentative = 0
     # Tant que le graphe n'est pas cop-win et qu'il n'est pas composé d'un cycle
-    while not ((isCyclic(graphe) and graphe.number_of_nodes() >= 4) or graphe.number_of_nodes() == 1):
-        graphe = dismantle(graphe)
+    while not ((isCyclic(graphe) and graphe.number_of_nodes() > 4) or graphe.number_of_nodes() == 1 or tentative > 40):
+        graphe, tentative = dismantle(graphe, tentative)
 
-    if isCyclic(graphe) and graphe.number_of_nodes() >= 4:
+    if (isCyclic(graphe) and graphe.number_of_nodes() > 4) or isPrism(graphe or tentative > 40):
         print("Le graphe est robber-win")
 
     else:
