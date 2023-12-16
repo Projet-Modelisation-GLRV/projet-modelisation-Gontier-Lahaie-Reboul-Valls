@@ -209,7 +209,3 @@ def demo_cop_win(plateau = createGame(10, 2)[0]):
 
     else:
         print("Le graphe est cop-win")
-
-
-# demo_dijkstra()
-#demo_cop_win()

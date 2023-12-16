@@ -30,3 +30,5 @@ def createGraph(n, type='random',edges= any):
 #plateau = createGraph(6,'circle')
 #test.demo_cop_win(plateau)
 test.demo_cop_win()
+
+#test.demo_dijkstra()
