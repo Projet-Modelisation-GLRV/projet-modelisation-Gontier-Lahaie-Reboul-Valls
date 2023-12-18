@@ -226,6 +226,30 @@ h2 {
         </table>
     
         <p>Un graphe est donc cop-win s’il est complet ou que l’ensemble de ses sommets est dominé par un autre.</p>
+
+        <li>Cas particulier</li>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Graphe</th>
+                <th>Observation</th>
+                <th>Démonstration</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><img src="media/graphe_isole.png" alt="Graphe isolé"></td>
+                <td>Un graphe non connexe est voleur gagnant.</td>
+                <td>Initialement, le policier choisit un sommet du graphe. Il suffit que le voleur choisisse un sommet sur une composante connexe différente de celle contenant le sommet occupé par le policier pour échapper éternellement à la capture.</td>
+            </tr>
+            <tr>
+                <td><img src="media/graphe_isole.png" alt="Graphe isolé"></td>
+                <td>Un graphe non connexe est voleur gagnant pour le jeu de poursuite irréflexif.</td>
+                <td>Donc la même démonstration que l’observation précédente reste valide.</td>
+            </tr>
+            </tbody>
+        </table>
     
         <li>Étude d’un plateau de taille 2x2</li>
         <p>Dans le cadre d’une partie avec 1 gendarme et 1 voleur sur un plateau 2x2, nous avons étudié les dispositions des pions sur le plateau afin de trouver les stratégies gagnantes.</p>
@@ -241,30 +265,19 @@ h2 {
         <p>O : gendarme</p>
         <p>Un numéro correspond à un sommet dans le graphe.</p>
         <p>Les sommets en fond jaune sont des cas où la partie se termine.</p>
-    
-        <li>Cas particulier</li>
-    
-        <table>
-            <thead>
-                <tr>
-                    <th>Graphe</th>
-                    <th>Observation</th>
-                    <th>Démonstration</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><img src="media/graphe_isole.png" alt="Graphe isolé"></td>
-                    <td>Un graphe non connexe est voleur gagnant.</td>
-                    <td>Initialement, le policier choisit un sommet du graphe. Il suffit que le voleur choisisse un sommet sur une composante connexe différente de celle contenant le sommet occupé par le policier pour échapper éternellement à la capture.</td>
-                </tr>
-                <tr>
-                    <td><img src="media/graphe_isole.png" alt="Graphe isolé"></td>
-                    <td>Un graphe non connexe est voleur gagnant pour le jeu de poursuite irréflexif.</td>
-                    <td>Donc la même démonstration que l’observation précédente reste valide.</td>
-                </tr>
-            </tbody>
-        </table>
+
+
+        <p>Ainsi, pour déterminer si ce plateau est voleur-gagnant ou policier-gagnant il est nécessaire d'en rechercher le noyau.
+        Nous utilisons ensuite la propriété suivante :<br>
+            <i>Tout joueur dont la position initiale n'est pas dans le noyau a une stratégie non perdante (donc nulle ou gagnée).</i>
+        </p>
+
+        <p>
+            Nous avons choisi de ne pas travailler ainsi, mais d'étudier uniquement la strucutre du plateau sous forme d'un graphe.
+            Nous avons fait ce choix car nous trouvions cela plus simple à présenter; en effet, ici, pour un plateau de 2x2, nous nous retrouvons
+            avec un graphe de 16 sommets alors qu'étudier le plateau directement correspond à un graphe de 4 sommets.
+        </p>
+
     
     </ol>
     
@@ -278,6 +291,11 @@ h2 {
         <li>Ensuite, tout au long de la partie, cet algorithme est joué pour le policier, afin de le déplacer vers le sommet le plus proche du voleur et pour le voleur afin de le déplacer vers le sommet le plus éloigné du policier.</li>
 
     <p>Nous utilisons donc l'algorithme de Dijkstra. Notre plateau est un graphe mais il n'est pas pondéré (notre algorithme considère donc que tous ses poids sont à 1).</p>
+
+    <p>Ci-dessous, l'alogirthme de Dijkstra détaillé.
+        Nous avons utilisé dans notre code une librairie en Python intégrant déjà cet algorithme mais afin de mieux comprendre son fonctionnement, nous l'avons recodé puis testé pour vérifier que nous obtenions bien les mêmes résultats.
+    </p><br>
+    <img src="media/dijkstra.png" alt="Graphe initial">
     
     <h2 id="VII">VII. "Cop number"</h2>
 
@@ -292,38 +310,117 @@ h2 {
         <br>
         <img src="media/graphe_cop_number.png" alt="Graphe cop number">
 
+    <p>
+        Concernant la preuve de cette théorie, nous pouvons la corréler à la théorie de coloriage des graphes.
+        Notre plateau est un graphe planaire connexe. Nous pouvons donc y appliquer le théorème des 4 couleurs.
+        Ce théorème indique que tout graphe planaire connexe peut être colorié avec 4 couleurs.
+        Ce théorème provient tout d'abord d'un premier théorème démontré en 1736 dont nous allons reprendre la démonstration.
+        Il a ensuite été repris jusqu'à la formulation d'hypothèses qui n'ont pu être vérifiées qu'au 20ème siècle à l'aide d'une approche informatique afin de vérifier un grand nombre de cas.
+        Ainsi, nous allons seulement ici démontrer le théorème qui a mené au théorème des 4 couleurs.
+    </p>
+
+    <p>
+        <i>Nous définiront dans les démonstration suivantes, un grape G avec V sommets, E arrêtes et F faces. G est un graphe planaire connexe.</i>
+        <br><br>
+        <b>Prouvons qu'un graphe planaire connexe est coloriable par 6 couleurs:</b>
+        <br>
+        <br>
+        Pour cela nous allons prouver qu'un graphe planaire n'a aucun de ses sommets qui possèdent un degrès supérieur à 5.
+        Nous supposerons ici que nos graphes ont au minimum 3 sommets.
+        <br>
+        Nous allons d'abord montrer que 3F <= 2E.
+        <br>
+        Posons d'abord la fonction nb(F) qui indique le nombre d'arêtes dans qui délimite une face F.
+        Nous savons que chaque face est délimitée par au moins 3 arêtes.<br>
+        Donc :<br>
+        nb(F) >= 3
+        Donc :<br>
+        &Sigma;nb(F) >= 3F<br>
+        Nous avons ensuite de l'autre côtés que chaque arête est une frontière entre deux sommets donc on peut en déduire que: <br>
+        &Sigma;nb(F) = 2E<br>
+        Donc en combinant les deux équations, on obtient 3F &le; 2E<br>
+
+        Passons maintenant à la démonstration principale,
+        Nous allons utiliser la formule d'Euler : V - E + F = 2.
+        <br>
+        Raisonnons par l'absurde et supposons que pour tout sommet de v de G, le degrée de v soit supérieur à 6. On a donc 6*V <= 2*E
+        car la somme de tous les sommets est égale à 2 fois le nombre d'arêtes.<br>
+        En appliquant la formule d'Euler, on a F = 2 + E - V
+        <br>
+        3F <= 2E
+        <br>
+        3(2+E-V) <= 2E
+        <br>
+        E <= 3V - 6
+        <br>
+        2E <= 6V - 12
+        <br>
+        Ce qui est en contradiction avec 6*V <= 2*E. Donc il existe un sommet de degré au plus de 5 dans G.<br>
+        <i>Ainsi, le graphe G peut être colorié par 6 couleurs maximum car chaque sommet peut être relié au plus à 5 sommets.</i>
+
+        <br>
+        <br>
+        <b>Démonstration du théorème d'Euler par induction:</b>
+        <br>
+        Pour 1 graphe avec 1 seul sommet V=1, sans arrêtes E=0 avec donc 1 seule face F=1 on a bien : 1 - 0 + 1 = 2
+        <br>
+        Si on ajoute une arrête à G sans créer de cyle supplémentaire, cela divise la face en 2 faces, augmentant le nombre d'arrêtes de 1 et le nombre de faces de 1. Le nombre de sommets reste le même.
+        <br>
+        V - (E + 1) + (F + 1) = 2 <br>
+        &hArr; V - E - 1 + F + 1 = 2 <br>
+        &hArr; V - E + F = 2 <br>
+        <br>
+        Ainsi, il s'agit d'une preuve du théorème par induction en ajoutant progressivement des arrêtes.<br>
+
+    </p>
+
     <h2 id="VIII">VIII. Intelligence artificielle</h2>
     
-    <p>L'objectif de ce projet est de créer un environnement interactif mettant en scène deux intelligences artificielles (IA) qui s'affronteront dans le rôle des gendarmes et des voleurs, chacune cherchant à remporter la partie. Au cours des différents affrontements, nous procéderons à une analyse comparative entre les graphes préalablement définis et les résultats de chaque partie.</p>
+    <p>
+        L'objectif de ce projet est de créer un environnement interactif mettant en scène une intelligence artificielle (IA) qui affronte un ordinateur (qui se charge uniquement de déplacer le voleur de manière aléatoire). Nous allons procéder à plusieurs parties et voir le résultat sur l'ensemble de ces parties.
+    <br>
+        Pour entrainer notre modèle, nous allons utiliser le principe du Reinforcement Learning (RL), ce qui consiste en l'apprentissage par la pratique. Pour cela nous avons mis en place plusieurs éléments, notamment un environnement qui se comportera comme un arbitre, il va vérifier et appliquer les règles du jeu. A partir d'action qu'on lui donnera, il nous renverra un état de jeu. Ensuite nous avons dû définir un agent d'entrainement, ce dernier se charge de jouer et d'apprendre. Pour cela il applique différentes actions à partir de police de décision (Random, Linéaraie). Il analyse ensuite les observations du système qu'il reçoit et en apprend.
+        Notre agent est de type Advantage Actor-Critic agent class, c'est un agent qui est composé d'un acteur qui contrôle les agents, et d'un critique, qui regarde la réponse par rapport à ceux qu'elle devrait être.
+        Le tout est utilisé dans un processus d'apprentissage, qui va mettre à jour ces poids en fonction du critique (c'est à dire si il considère le résultat correct ou non).
+    </p>
+    <br>
+    <p>
+        Ainsi, dans le cadre de notre projet c'est la méthode utilisant l'algorithme du plus court chemin qui est le plus efficace.
+        En effet, il faudrait entrainer un modèle plus précis d'IA afin d'obtenir de meilleurs résultats que ceux obtenus grâce au plus court chemin.
+        Une IA suffisamment bien entrainée pourrait être capable d'anticiper la position à adopter la plus optimisée sur le long terme.
+        Cela ne consiste donc pas uniquement en la recherche du plus court chemin mais bien d'anticiper le prochain déplacement de l'adversaire pour s'en éloigner le plus possible (pour le voleur) ou s'en rapprocher (pour le policier).
+    </p>
     
-    <p>Nos IA seront basées sur le modèle des arbres de décision, où chaque décision est dictée par un arbre logique définissant les actions à entreprendre en fonction de la situation. Pour illustrer, lors du tour des voleurs, si un gendarme a la possibilité d'atteindre un voleur au prochain tour, le joueur examinera les cases accessibles. Si une case n'est pas occupée par un gendarme ou n'est pas à leur portée, le voleur s'y dirigera. En revanche, si la case est occupée ou hors de portée, le voleur prendra une action conduisant à une défaite inévitable.</p>
-    
-    <h2>Liens utiles :</h2>
+    <h2>Sources :</h2>
     
     <ul>
         <li><a href="https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/16692/Zine_Youssef_2005_memoire.pdf?sequence=1&isAllowed=y">Zine_Youssef_2005_memoire.pdf</a></li>
         <li><a href="https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/17845/El_Ouarari_Amal_2006_memoire.pdf?sequence=1&isAllowed=y">El_Ouarari_Amal_2006_memoire.pdf</a></li>
         <li><a href="https://www-sop.inria.fr/mascotte/seminaires/JGA08/pdf/nisse.pdf">Jeu des gendarmes et du voleur (inria.fr)</a></li>
         <li><a href="https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/16660/Ramanampanoharana_Tantely_2004_memoire.pdf?sequence=1&isAllowed=y">Ramanampanoharana_Tantely_2004_memoire.pdf</a></li>
-    </ul>
-    
-    <h2>Anglais :</h2>
-    
-    <ul>
         <li><a href="https://papyrus.bib.umontreal.ca/xmlui/bitstream/handle/1866/27810/Ramamonjisoa_Frank_2022_these.pdf?sequence=2#page=73">Ramamonjisoa_Frank_2022_these.pdf</a></li>
         <li><a href="https://www.sciencedirect.com/science/article/pii/0012365X83901607">Lien ScienceDirect</a></li>
         <li><a href="https://www.sciencedirect.com/science/article/pii/S0012365X08002173">The capture time of a graph - ScienceDirect</a></li>
         <li><a href="https://www.sciencedirect.com/science/article/pii/S0012365X16304307">Cops and Robbers ordinals of cop-win trees - ScienceDirect</a></li>
         <li><a href="https://www.sciencedirect.com/science/article/pii/S0012365X12000064">Characterizations of k-copwin graphs - ScienceDirect</a></li>
         <li><a href="https://www.ams.org/notices/201208/rtx120801100p.pdf">WHAT IS . . . Cop Number? - Anthony Bonato</a></li>
+        <li><a href="https://indico.math.cnrs.fr/event/3369/attachments/2198/2568/pres_4CT.pdf">Théorème des 4 couleurs</a></li>
     </ul>
     
-    <h2>Vidéo :</h2>
+    <h2>Vidéos :</h2>
     
     <ul>
         <li><a href="https://www.youtube.com/watch?v=tfGJtIdslfs">Des intelligences artificielles jouent à cache-cache et crack le jeu !</a></li>
-        <li><a href="https://www.youtube.com/watch?v=71UbDN4csas">J'ai codé un robot pour ATOMISER Crossy Road.</a></li>
         <li><a href="https://www.youtube.com/watch?v=9mJEu-j1KT0">The Cops and Robbers Theorem | Infinite Series</a></li>
     </ul>
+
+    <h2>Implication des membres et tâches :</h2>
+<p>Luke Gontier (10%) : recherches historiques et implémentation des graphes représentant les plateaux.</p>
+<br>
+<p>Thibaut Lahaie (30%): code des algorithmes de recherche du plus court chemin.</p>
+<br>
+<p>Nathan Reboul (20%): réalisation du rapport et du diaporama.</p>
+<br>
+<p>Marion Valls (40%): réalisation des recherches mathématiques et de l'implémentation de l'intelligence artificielle.</p>
 </body>
 </html>
