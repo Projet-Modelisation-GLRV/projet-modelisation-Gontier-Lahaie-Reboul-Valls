@@ -10,6 +10,7 @@ import numpy as np
 def createGame(n, distanceBetweenPlayers=3):
     # Génération d'un graphe aléatoire de taille n
     graphe = nx.gnm_random_graph(n, n * 2)
+
     # Placer un gendarme et un voleur aléatoirement sur le graphe
     gendarme = np.random.randint(0, n)
     voleur = np.random.randint(0, n)
@@ -44,7 +45,7 @@ def getNextMoveWithNetworkx(graphe, gendarme, voleur):
 
 def showGraph(graphe, gendarme=None, voleur=None, nextGendarmeMove=None, nextVoleurMove=None):
     # Vérifier si un gendarme et un voleur doivent être affichés
-    if not (gendarme is None and voleur is None):
+    if not (gendarme is None or voleur is None):
         colors = []
         # Pour chaque noeud du graphe, ajouter la couleur associé si c'est un gendarme, voleur ou prochain coup
         for i in range(graphe.number_of_nodes()):
@@ -194,7 +195,7 @@ def isPrism(graphe):
         return True
 
 
-def demo_cop_win(plateau = createGame(10, 2)[0]):
+def demo_cop_win(plateau=createGame(10, 2)[0]):
     # Création d'un jeu aléatoire de n sommets
     graphe = plateau
     showGraph(graphe)
@@ -209,3 +210,39 @@ def demo_cop_win(plateau = createGame(10, 2)[0]):
 
     else:
         print("Le graphe est cop-win")
+
+
+def play(graphe=None, gendarme=None, voleur=None):
+    if graphe is None:
+        # Création d'un jeu aléatoire de n sommets
+        graphe, gendarme, voleur = createGame(10, 3)
+
+    # Afficher le graphe
+    showGraph(graphe, gendarme, voleur)
+    time.sleep(1)
+
+    currentTurn = "gendarme"
+    turn = 0
+    while not (gendarme == voleur and turn < 25):
+        if currentTurn == "gendarme":
+            nextGendarmeMove, nextVoleurMove = getNextMoveWithNetworkx(graphe, gendarme, voleur)
+            gendarme = nextGendarmeMove
+            currentTurn = "voleur"
+            showGraph(graphe, gendarme, voleur, nextGendarmeMove, None)
+            time.sleep(1)
+
+        else:
+            nextGendarmeMove, nextVoleurMove = getNextMoveWithDijkstraAlgo(graphe, gendarme, voleur)
+            voleur = nextVoleurMove
+            currentTurn = "gendarme"
+            showGraph(graphe, gendarme, voleur, None, nextVoleurMove)
+            time.sleep(1)
+        turn += 1
+        plt.clf()
+        plt.close('all')
+        plt.cla()
+
+    if turn < 25:
+        print("Le gendarme a attrapé le voleur")
+    else:
+        print("Le voleur a réussi à s'échapper")
